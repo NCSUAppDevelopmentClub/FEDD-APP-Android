@@ -13,4 +13,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Student"
+        android:id="@+id/student"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Judge"
+        android:id="@+id/judge"
+        android:layout_below="@+id/student"
+        android:layout_alignLeft="@+id/student"
+        android:layout_alignStart="@+id/student"
+        android:layout_marginTop="69dp" />
+
 </RelativeLayout>
