@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "299792377569",
+    "firebase_url": "https://feddapp.firebaseio.com",
+    "project_id": "feddapp",
+    "storage_bucket": "feddapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299792377569:android:ab9d8ec2424bfa71",
+        "android_client_info": {
+          "package_name": "com.example.thomas.fedd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299792377569-tk8k9drhp5ll77qg8vhpbdkok6sh7i4p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS9gBs0Y9VZxRUnXfQNo3L1vDfhIC28Yw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
