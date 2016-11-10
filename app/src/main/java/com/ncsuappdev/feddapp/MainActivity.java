@@ -24,7 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, FirebaseAuth.AuthStateListener, ResultCallback<GoogleSignInResult> {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, ResultCallback<GoogleSignInResult> {
     private static final int RC_SIGN_IN = 0;
     final String tag = "main activity";
     private GoogleApiClient mGoogleApiClient;
@@ -47,24 +47,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .build();
         Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient).setResultCallback(this);
 
-        mAuth = FirebaseAuth.getInstance();
-        mAuth.addAuthStateListener(this);
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Scores/Arcade Game");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                DataSnapshot ds = dataSnapshot.getChildren().iterator().next();
-                ((TextView) findViewById(R.id.textView)).setText(ds.getKey() + ": " + ds.getValue());
-                Log.e(tag, "update from database");
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(tag, "database error");
-            }
-        });
+        LeaderboardData.initialize();
 
         signOutButton = (Button) findViewById(R.id.signout);
         signOutButton.setOnClickListener(this);
@@ -118,10 +101,5 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e(tag, "connection failed");
-    }
-
-    @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
     }
 }
