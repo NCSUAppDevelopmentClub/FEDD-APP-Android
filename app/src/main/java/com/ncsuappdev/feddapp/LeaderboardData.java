@@ -13,8 +13,10 @@ public class LeaderboardData {
 
     private LeaderboardData() {};
 
-    public LeaderboardData getInstance() {
+    public static LeaderboardData getInstance() {
         if (instance == null) instance = new LeaderboardData();
         return instance;
     }
+
+
 }
