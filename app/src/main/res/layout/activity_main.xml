@@ -36,4 +36,17 @@
         android:layout_marginBottom="23dp"
         android:id="@+id/loginstatus"
         android:textAppearance="@style/TextAppearance.AppCompat" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signout"
+        android:layout_toRightOf="@+id/signout"
+        android:layout_toEndOf="@+id/signout"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="128dp"
+        android:id="@+id/textView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 </RelativeLayout>
