@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:299792377569:android:ab9d8ec2424bfa71",
+        "mobilesdk_app_id": "1:299792377569:android:b7b609991539a800",
         "android_client_info": {
-          "package_name": "com.example.thomas.fedd"
+          "package_name": "com.ncsuappdev.feddapp"
         }
       },
       "oauth_client": [
