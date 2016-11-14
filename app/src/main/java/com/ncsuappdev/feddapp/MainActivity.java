@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private FirebaseAuth mAuth;
     private SignInButton signInButton;
     private Button signOutButton;
+    private Button deleteThis;
     private boolean signedIn = false;
 
     @Override
@@ -53,6 +54,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         signOutButton.setOnClickListener(this);
         signInButton = (SignInButton) findViewById(R.id.signInButton);
         signInButton.setOnClickListener(this);
+
+        deleteThis = (Button) findViewById(R.id.button2);
+        deleteThis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, Leaderboard3.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override

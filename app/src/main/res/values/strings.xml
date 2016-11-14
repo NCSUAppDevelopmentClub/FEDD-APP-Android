@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Fedd App</string>
     <string name="title_activity_leaderboard">Leaderboard</string>
+    <string name="title_activity_leaderboard2">Leaderboard2</string>
 </resources>
