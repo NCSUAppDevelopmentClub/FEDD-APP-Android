@@ -3,31 +3,45 @@ package com.ncsuappdev.feddapp;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import static android.R.attr.tag;
+
 public class Leaderboard3 extends AppCompatActivity {
+    public static String tag = "Leaderboard3";
+    public static Leaderboard3 instance;
+    public ListView list;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_leaderboard3);
+
+        list = (ListView) findViewById(R.id.list3);
+        list.setAdapter(new LeaderboardAdapter(this));
+
+        instance = this;
+    }
+
     public static class LeaderboardAdapter extends BaseAdapter {
         private static LayoutInflater inflater;
         Context context;
 
         public LeaderboardAdapter(Context context) {
-
             this.context = context;
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         public int getCount(){
-            int sum = 0;
-            LeaderboardData data = LeaderboardData.getInstance();
-            for(int i = 0; i < data.projectNames.length; i++){
-                sum += data.teamNames[i].length;
-            }
-            return sum;
+            return LeaderboardData.getInstance().list.size();
         }
 
         @Override
@@ -52,42 +66,22 @@ public class Leaderboard3 extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View vi = convertView;
-            if(vi == null) vi = inflater.inflate(R.layout.row, null);
+        public View getView(int position, View view, ViewGroup parent) {
+            if (view == null) view = inflater.inflate(R.layout.leaderboard_row, null);
 
-
-
-            TextView txt = (TextView) vi.findViewById(R.id.text);
-
-            int sum = 0;
-            LeaderboardData data = LeaderboardData.getInstance();
-            int x = 0;
-            for(; sum < position; x++){
-                sum += data.teamNames[x].length;
+            Object o = LeaderboardData.getInstance().list.get(position);
+            if (o instanceof LeaderboardData.Team) {
+                ((TextView) ((RelativeLayout) view).getChildAt(0).findViewById(R.id.teamName)).setText(((LeaderboardData.Team) o).name);
+                ((TextView) ((RelativeLayout) view).getChildAt(0).findViewById(R.id.teamScore)).setText(((LeaderboardData.Team) o).score);
+                view.findViewById(R.id.team).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.title).setVisibility(View.GONE);
+            } else {
+                ((TextView) ((RelativeLayout) view).getChildAt(1)).setText((String) o);
+                view.findViewById(R.id.title).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.team).setVisibility(View.GONE);
             }
-
-            sum -= data.teamNames[x].length;
-            if(x == data.projectNames.length)return null;
-            String s = data.teamNames[x][position - sum - 1];
-            s += " "+data.scores[x][position - sum - 1];
-
-            txt.setText(s);
-//
-//            ViewGroup.LayoutParams params = vi.getLayoutParams();
-//
-//            // Set the height of the Item View
-//            params.height = 40;
-
-            return vi;
+            return view;
         }
     }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_leaderboard3);
 
-        ListView list = (ListView) findViewById(R.id.list3);
-        list.setAdapter(new LeaderboardAdapter(this));
-    }
 }
