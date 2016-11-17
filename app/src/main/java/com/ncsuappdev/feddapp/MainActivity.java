@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             findViewById(R.id.signInButton).setEnabled(false);
             findViewById(R.id.signOutButton).setEnabled(true);
             signedIn = true;
-            ((TextView) findViewById(R.id.loginstatus)).setText("Logged in as " + result.getSignInAccount().getEmail());
+            ((TextView) findViewById(R.id.loginStatus)).setText("Logged in as " + result.getSignInAccount().getEmail());
         } else {
             Log.e(tag, "login failed");
             signOut();
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         findViewById(R.id.signInButton).setEnabled(true);
         findViewById(R.id.signOutButton).setEnabled(false);
         signedIn = false;
-        ((TextView) findViewById(R.id.loginstatus)).setText("Logged out");
+        ((TextView) findViewById(R.id.loginStatus)).setText("Logged out");
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
     }
 
