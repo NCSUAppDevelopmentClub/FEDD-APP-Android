@@ -15,7 +15,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Leaderboard3"></activity>
+        <activity android:name=".Leaderboard3" />
+        <activity android:name=".ScoreList"></activity>
     </application>
 
 </manifest>

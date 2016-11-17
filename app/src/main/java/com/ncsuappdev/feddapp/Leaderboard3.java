@@ -1,6 +1,7 @@
 package com.ncsuappdev.feddapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
@@ -20,6 +21,7 @@ public class Leaderboard3 extends AppCompatActivity {
     public static Leaderboard3 instance;
     public ListView list;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,8 +33,8 @@ public class Leaderboard3 extends AppCompatActivity {
         instance = this;
     }
 
-    public static class LeaderboardAdapter extends BaseAdapter {
-        private static LayoutInflater inflater;
+    public  class LeaderboardAdapter extends BaseAdapter {
+        private LayoutInflater inflater;
         Context context;
 
         public LeaderboardAdapter(Context context) {
@@ -69,12 +71,24 @@ public class Leaderboard3 extends AppCompatActivity {
         public View getView(int position, View view, ViewGroup parent) {
             if (view == null) view = inflater.inflate(R.layout.leaderboard_row, null);
 
-            Object o = LeaderboardData.getInstance().list.get(position);
+            final Object o = LeaderboardData.getInstance().list.get(position);
             if (o instanceof LeaderboardData.Team) {
                 ((TextView) ((RelativeLayout) view).getChildAt(0).findViewById(R.id.teamName)).setText(((LeaderboardData.Team) o).name);
                 ((TextView) ((RelativeLayout) view).getChildAt(0).findViewById(R.id.teamScore)).setText(((LeaderboardData.Team) o).score);
                 view.findViewById(R.id.team).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.title).setVisibility(View.GONE);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO If authenticated, start actitivy
+                        Intent i = new Intent(Leaderboard3.this, ScoreList.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("project", ((LeaderboardData.Team) o).project);
+                        bundle.putString("team", ((LeaderboardData.Team) o).name);
+                        i.putExtras(bundle);
+                        startActivity(i);
+                    }
+                });
             } else {
                 ((TextView) ((RelativeLayout) view).getChildAt(1)).setText((String) o);
                 view.findViewById(R.id.title).setVisibility(View.VISIBLE);
