@@ -3,10 +3,12 @@ package com.ncsuappdev.feddapp;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ButtonBarLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,6 +25,8 @@ public class ScoreList extends AppCompatActivity {
 
     ArrayList<ScoreEntry> entries = new ArrayList<ScoreEntry>();
     public ListView list;
+    public Button dq;
+    public Button publish;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,27 @@ public class ScoreList extends AppCompatActivity {
 
         String project = b.getString("project");
         String teamName = b.getString("team");
+
+        dq = (Button) findViewById(R.id.dq);
+        publish = (Button) findViewById(R.id.publish);
+
+        //TODO if  super user:
+        dq.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                //Popup to confirm?
+            }
+        });
+        publish.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                //popup to confirm?
+            }
+        });
+        // TODO else: test if it wraps
+        dq.setVisibility(View.GONE);
+        publish.setVisibility(View.GONE);
+        //TODO end else
+
+        //TODO Genrate list of score entries
 
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(new ScoreListAdapter(this));
