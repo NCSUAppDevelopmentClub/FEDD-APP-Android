@@ -1,6 +1,7 @@
 package com.ncsuappdev.feddapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ButtonBarLayout;
@@ -26,6 +27,7 @@ import static com.ncsuappdev.feddapp.Leaderboard3.tag;
 
 public class ScoreList extends AppCompatActivity {
 
+
     static class ScoreEntry{
         String judge;
         int score;
@@ -35,13 +37,15 @@ public class ScoreList extends AppCompatActivity {
     public ListView list;
     public Button dq;
     public Button publish;
+    String project;
+    String teamName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_list);
 
-        String project = getIntent().getStringExtra("project");
-        String teamName = getIntent().getStringExtra("team");
+        project = getIntent().getStringExtra("project");
+        teamName = getIntent().getStringExtra("team");
 
         dq = (Button) findViewById(R.id.dq);
         publish = (Button) findViewById(R.id.publish);
@@ -118,6 +122,13 @@ public class ScoreList extends AppCompatActivity {
 
                 @Override
                 public void onClick(View view) {
+                    Intent i = new Intent(ScoreList.this, ScoreEdit.class);
+                    Bundle b = new Bundle();
+                    b.putString("project",project);
+                    b.putString("team", teamName);
+                    b.putString("judge", o.judge);
+                    i.putExtras(b);
+                    startActivity(i);
                     //Intent to load score edit
                 }
             });
