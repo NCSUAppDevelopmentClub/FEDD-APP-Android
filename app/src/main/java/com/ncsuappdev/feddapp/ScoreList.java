@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ButtonBarLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,17 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
-public class ScoreList extends AppCompatActivity {
+import static com.ncsuappdev.feddapp.Leaderboard3.tag;
 
+public class ScoreList extends AppCompatActivity {
 
     static class ScoreEntry{
         String judge;
@@ -31,10 +39,9 @@ public class ScoreList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_list);
-        Bundle b = getIntent().getExtras();
 
-        String project = b.getString("project");
-        String teamName = b.getString("team");
+        String project = getIntent().getStringExtra("project");
+        String teamName = getIntent().getStringExtra("team");
 
         dq = (Button) findViewById(R.id.dq);
         publish = (Button) findViewById(R.id.publish);
@@ -55,7 +62,25 @@ public class ScoreList extends AppCompatActivity {
         publish.setVisibility(View.GONE);
         //TODO end else
 
-        //TODO Genrate list of score entries
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Teams/" + project + "/" + teamName + "/Scores");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    ScoreEntry e = new ScoreEntry();
+                    e.judge = ds.getKey();
+                    e.score = 0;
+                    for (DataSnapshot d : ds.getChildren()) e.score += (long) d.getValue();
+                    entries.add(e);
+                }
+                ((BaseAdapter) list.getAdapter()).notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(new ScoreListAdapter(this));
@@ -86,8 +111,8 @@ public class ScoreList extends AppCompatActivity {
             if (view == null) view = inflater.inflate(R.layout.leaderboard_team, null);
 
             final ScoreEntry o = entries.get(position);
-            ((TextView) ((RelativeLayout) view).getChildAt(0).findViewById(R.id.teamName)).setText(o.judge);
-            ((TextView) ((RelativeLayout) view).getChildAt(0).findViewById(R.id.teamScore)).setText(o.score);
+            ((TextView) ((RelativeLayout) view).findViewById(R.id.teamName)).setText(o.judge);
+            ((TextView) ((RelativeLayout) view).findViewById(R.id.teamScore)).setText(o.score+"");
 
             view.setOnClickListener(new View.OnClickListener(){
 

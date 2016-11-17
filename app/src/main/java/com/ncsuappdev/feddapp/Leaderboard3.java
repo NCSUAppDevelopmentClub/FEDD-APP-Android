@@ -81,11 +81,9 @@ public class Leaderboard3 extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         //TODO If authenticated, start actitivy
-                        Intent i = new Intent(Leaderboard3.this, ScoreList.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("project", ((LeaderboardData.Team) o).project);
-                        bundle.putString("team", ((LeaderboardData.Team) o).name);
-                        i.putExtras(bundle);
+                        Intent i = new Intent(Leaderboard3.this, ScoreList.class)
+                                .putExtra("project", ((LeaderboardData.Team) o).project)
+                                .putExtra("team", ((LeaderboardData.Team) o).name);
                         startActivity(i);
                     }
                 });

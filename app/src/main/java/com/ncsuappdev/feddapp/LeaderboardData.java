@@ -46,7 +46,7 @@ public class LeaderboardData implements ValueEventListener {
             list.add(ds.getKey());
             cat.clear();
             for (DataSnapshot d : ds.getChildren())
-                cat.add(new Team(d.getKey(), d.getValue().toString()));
+                cat.add(new Team(d.getKey(), d.getValue().toString(), ds.getKey()));
             Collections.sort(cat);
             list.addAll(cat);
         }
@@ -65,9 +65,10 @@ public class LeaderboardData implements ValueEventListener {
         public String score;
         public String project;
 
-        public Team(String name, String score) {
+        public Team(String name, String score, String project) {
             this.name = name;
             this.score = score;
+            this.project = project;
         }
 
         public String toString() {

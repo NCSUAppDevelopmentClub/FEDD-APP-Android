@@ -1,9 +1,9 @@
 package com.ncsuappdev.feddapp;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,20 +15,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, ResultCallback<GoogleSignInResult> {
     private static final int RC_SIGN_IN = 0;
     final String tag = "main activity";
     private GoogleApiClient mGoogleApiClient;
-    private FirebaseAuth mAuth;
     private SignInButton signInButton;
     private Button signOutButton;
     private Button deleteThis;
@@ -50,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         LeaderboardData.initialize();
 
-        signOutButton = (Button) findViewById(R.id.signout);
+        signOutButton = (Button) findViewById(R.id.signOutButton);
         signOutButton.setOnClickListener(this);
         signInButton = (SignInButton) findViewById(R.id.signInButton);
         signInButton.setOnClickListener(this);
@@ -72,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
                 break;
-            case R.id.signout:
+            case R.id.signOutButton:
                 signOut();
                 break;
         }
@@ -87,10 +79,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onResult(@NonNull GoogleSignInResult result) {
+//        Log.e(tag, result.getSignInAccount()+"");
         if (result.isSuccess()) {
             Log.e(tag, "logged in with " + result.getSignInAccount().getEmail());
             findViewById(R.id.signInButton).setEnabled(false);
-            findViewById(R.id.signout).setEnabled(true);
+            findViewById(R.id.signOutButton).setEnabled(true);
             signedIn = true;
             ((TextView) findViewById(R.id.loginstatus)).setText("Logged in as " + result.getSignInAccount().getEmail());
         } else {
@@ -102,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void signOut() {
         Log.e(tag, "sign out");
         findViewById(R.id.signInButton).setEnabled(true);
-        findViewById(R.id.signout).setEnabled(false);
+        findViewById(R.id.signOutButton).setEnabled(false);
         signedIn = false;
         ((TextView) findViewById(R.id.loginstatus)).setText("Logged out");
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
