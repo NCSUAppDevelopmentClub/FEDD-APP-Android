@@ -82,10 +82,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 //        Log.e(tag, result.getSignInAccount()+"");
         if (result.isSuccess()) {
             Log.e(tag, "logged in with " + result.getSignInAccount().getEmail());
-            findViewById(R.id.signInButton).setEnabled(false);
-            findViewById(R.id.signOutButton).setEnabled(true);
+            findViewById(R.id.signInButton).setVisibility(View.INVISIBLE);
+            findViewById(R.id.signOutButton).setVisibility(View.VISIBLE);
+            findViewById(R.id.loginStatus).setVisibility(View.VISIBLE);
             signedIn = true;
-            ((TextView) findViewById(R.id.loginStatus)).setText("Logged in as " + result.getSignInAccount().getEmail());
+            ((TextView) findViewById(R.id.loginStatus)).setText(result.getSignInAccount().getEmail() + "\nBasic User");
         } else {
             Log.e(tag, "login failed");
             signOut();
@@ -94,8 +95,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void signOut() {
         Log.e(tag, "sign out");
-        findViewById(R.id.signInButton).setEnabled(true);
-        findViewById(R.id.signOutButton).setEnabled(false);
+        findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
+        findViewById(R.id.signOutButton).setVisibility(View.INVISIBLE);
+        findViewById(R.id.loginStatus).setVisibility(View.INVISIBLE);
         signedIn = false;
         ((TextView) findViewById(R.id.loginStatus)).setText("Logged out");
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
