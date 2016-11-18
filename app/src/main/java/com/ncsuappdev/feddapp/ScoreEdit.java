@@ -1,8 +1,9 @@
 package com.ncsuappdev.feddapp;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,12 +19,12 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import static com.ncsuappdev.feddapp.Leaderboard3.tag;
 
 public class ScoreEdit extends AppCompatActivity {
 
@@ -33,15 +34,17 @@ public class ScoreEdit extends AppCompatActivity {
         int value;
 
         public String toString() {
-            return label + ": " + max;
+            return label + ": " + value;
         }
     }
     ArrayList<Entry> entries = new ArrayList<Entry>();
 
     String project;
     String team;
-    String judge;
+    String judge = "";
     ListView list;
+    boolean edit;
+    String oldKey;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +52,13 @@ public class ScoreEdit extends AppCompatActivity {
         Bundle b = getIntent().getExtras();
         project = b.getString("project");
         team = b.getString("team");
-        judge = b.getString("judge");
+        edit = b.getBoolean("edit");
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Projects/" + project);
-        ref.addValueEventListener(new ValueEventListener() {
+        if (edit)
+            judge = oldKey = b.getString("judge");
+
+        FirebaseDatabase.getInstance().getReference("Projects/" + project)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 entries.clear();
@@ -62,6 +68,27 @@ public class ScoreEdit extends AppCompatActivity {
                     e.label = (String) ds.child("name").getValue();
                     entries.add(e);
                 }
+                ((BaseAdapter) list.getAdapter()).notifyDataSetChanged();
+
+                Log.e(tag, "Teams/" + project + "/" + team + "/Scores/" + judge);
+                FirebaseDatabase.getInstance().getReference("Teams/" + project + "/" + team + "/Scores/" + judge)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    int index = Integer.parseInt(ds.getKey());
+                                    if (index >= 0 && index < entries.size())
+                                        entries.get(index).value = (int) (long) ds.getValue();
+                                }
+                                Log.e(tag, entries.toString());
+                                ((BaseAdapter) list.getAdapter()).notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
             }
 
             @Override
@@ -111,8 +138,15 @@ public class ScoreEdit extends AppCompatActivity {
                     ((TextView) view.findViewById(R.id.category)).setText(((Entry) o).label);
                     NumberPicker picker = (NumberPicker) view.findViewById(R.id.score);
                     picker.setMinValue(0);
-                    picker.setValue(((Entry) o).value);
                     picker.setMaxValue(((Entry) o).max);
+                    picker.setValue(((Entry) o).value);
+                    final Entry e = (Entry) o;
+                    picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                        @Override
+                        public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                            e.value = newVal;
+                        }
+                    });
                 } else{
                     //TODO not a number picker
                     view = inflater.inflate(R.layout.score_edit_bonus, null);
@@ -147,7 +181,7 @@ public class ScoreEdit extends AppCompatActivity {
 
                     //TODO set the text to append a number if multiple of the same
                 } else{
-                    if(view == null) view = inflater.inflate(R.layout.score_edit_done, null);
+                    view = inflater.inflate(R.layout.score_edit_done, null);
                     ((Button) view.findViewById(R.id.saveScore)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

@@ -51,12 +51,12 @@ public class LeaderboardData implements ValueEventListener {
             list.addAll(cat);
         }
 //        Log.e(tag, list.toString());
-        Log.e(tag, "data changed!");
+//        Log.e(tag, "data changed!");
         // tell the list to update
         Leaderboard3 l = Leaderboard3.instance;
         if (l != null) {
             ((BaseAdapter) l.list.getAdapter()).notifyDataSetChanged();
-            Log.e(tag, "updated list view");
+//            Log.e(tag, "updated list view");
         }
     }
 

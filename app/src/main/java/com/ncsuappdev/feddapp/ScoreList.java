@@ -128,6 +128,7 @@ public class ScoreList extends AppCompatActivity {
                     b.putString("project",project);
                     b.putString("team", teamName);
                     b.putString("judge", o.judge);
+                    b.putBoolean("edit", true);
                     i.putExtras(b);
                     startActivity(i);
                     //Intent to load score edit
