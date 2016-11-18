@@ -2,11 +2,17 @@ package com.ncsuappdev.feddapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ButtonBarLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -39,13 +45,44 @@ public class ScoreList extends AppCompatActivity {
     public Button publish;
     String project;
     String teamName;
+//
+     @Override
+     public boolean onCreateOptionsMenu(Menu menu){
+         super.onCreateOptionsMenu(menu);
+         MenuInflater inflater = getMenuInflater();
+         inflater.inflate(R.menu.add_menu,  menu);
+//         menu.findItem(R.id.)
+//         Log.e("MEnu: ", menu.getItem(0).toString());
+        return true;
+     }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.mybutton) {
+            //process your onClick here
+            Log.e("YAY", "YAY");
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_score_list);
 
         project = getIntent().getStringExtra("project");
         teamName = getIntent().getStringExtra("team");
+
+        ActionBar bar = this.getSupportActionBar();
+        bar.setTitle(teamName);
+        bar.setBackgroundDrawable(new ColorDrawable(Color.RED));
+//        bar.
 
         dq = (Button) findViewById(R.id.dq);
         publish = (Button) findViewById(R.id.publish);

@@ -1,8 +1,11 @@
 package com.ncsuappdev.feddapp;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -28,10 +31,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private Button deleteThis;
     private boolean signedIn = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.getWindow().setStatusBarColor(Color.rgb(200,0,0));
+        ActionBar bar = this.getSupportActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(Color.RED));
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()

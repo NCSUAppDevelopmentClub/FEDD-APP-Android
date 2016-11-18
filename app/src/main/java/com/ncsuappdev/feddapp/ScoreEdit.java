@@ -1,6 +1,10 @@
 package com.ncsuappdev.feddapp;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.annotation.IntegerRes;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +53,10 @@ public class ScoreEdit extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score_edit);
+
+        ActionBar bar = this.getSupportActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(Color.RED));
+
         Bundle b = getIntent().getExtras();
         project = b.getString("project");
         team = b.getString("team");
@@ -148,7 +156,6 @@ public class ScoreEdit extends AppCompatActivity {
                         }
                     });
                 } else{
-                    //TODO not a number picker
                     view = inflater.inflate(R.layout.score_edit_bonus, null);
                     ((TextView) view.findViewById(R.id.category)).setText("" + ((Entry) o).label);
                     ((EditText)view.findViewById(R.id.editText)).setText("" + ((Entry) o).value);
