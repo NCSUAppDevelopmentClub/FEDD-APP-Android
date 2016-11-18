@@ -13,12 +13,17 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/numberPicker" />
 
-    <NumberPicker
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/score"
-        android:layout_alignParentTop="false"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_alignBaseline="@+id/category"
+        android:layout_alignBottom="@+id/category"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="false"
-        android:layout_centerVertical="true" />
+        android:layout_alignParentEnd="true"
+        android:text="0" />
+
+
 </RelativeLayout>
