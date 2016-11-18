@@ -66,7 +66,7 @@ public class ScoreEdit extends AppCompatActivity {
             judge = oldKey = b.getString("judge");
 
         FirebaseDatabase.getInstance().getReference("Projects/" + project)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 entries.clear();
@@ -77,6 +77,8 @@ public class ScoreEdit extends AppCompatActivity {
                     entries.add(e);
                 }
                 ((BaseAdapter) list.getAdapter()).notifyDataSetChanged();
+
+                if (!edit) return;
 
                 Log.e(tag, "Teams/" + project + "/" + team + "/Scores/" + judge);
                 FirebaseDatabase.getInstance().getReference("Teams/" + project + "/" + team + "/Scores/" + judge)

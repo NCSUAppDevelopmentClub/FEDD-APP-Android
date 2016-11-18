@@ -62,7 +62,13 @@ public class ScoreList extends AppCompatActivity {
 
         if (id == R.id.mybutton) {
             //process your onClick here
-            Log.e("YAY", "YAY");
+            Intent i = new Intent(ScoreList.this, ScoreEdit.class);
+            Bundle b = new Bundle();
+            b.putString("project",project);
+            b.putString("team", teamName);
+            b.putBoolean("edit", false);
+            i.putExtras(b);
+            startActivity(i);
             return true;
         }
 

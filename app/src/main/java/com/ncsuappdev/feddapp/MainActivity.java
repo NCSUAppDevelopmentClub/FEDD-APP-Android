@@ -3,6 +3,7 @@ package com.ncsuappdev.feddapp;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.getWindow().setStatusBarColor(Color.rgb(200,0,0));
+        if (Build.VERSION.SDK_INT >= 21)
+            this.getWindow().setStatusBarColor(Color.rgb(200,0,0));
         ActionBar bar = this.getSupportActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.RED));
 
