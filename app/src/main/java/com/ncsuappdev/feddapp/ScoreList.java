@@ -160,7 +160,7 @@ public class ScoreList extends AppCompatActivity {
 
             final ScoreEntry o = entries.get(position);
             ((TextView) ((RelativeLayout) view).findViewById(R.id.teamName)).setText(o.judge);
-            ((TextView) ((RelativeLayout) view).findViewById(R.id.teamScore)).setText(o.score+"");
+            ((TextView) ((RelativeLayout) view).findViewById(R.id.teamScore)).setText(o.score + "");
 
             view.setOnClickListener(new View.OnClickListener(){
 

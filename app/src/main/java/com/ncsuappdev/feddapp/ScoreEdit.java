@@ -65,6 +65,29 @@ public class ScoreEdit extends AppCompatActivity {
         team = b.getString("team");
         edit = b.getBoolean("edit");
 
+        EditText lab = ((EditText) findViewById(R.id.editText2));
+        Log.e("HERE", lab.getText().toString());
+        if (!lab.getText().toString().equals(judge)) lab.setText(judge);
+        lab.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        lab.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT || i == EditorInfo.IME_ACTION_UNSPECIFIED){
+                    judge = textView.getText().toString();
+//                            return true;
+                }
+                return false;
+                //return true;
+            }
+        });
+        lab.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                judge = ((EditText)view).getText().toString();
+            }
+        });
+
+
         if (edit)
             judge = oldKey = b.getString("judge");
 
@@ -136,14 +159,14 @@ public class ScoreEdit extends AppCompatActivity {
         }
         @Override
         public int getCount() {
-            return entries.size() + 2;
+            return entries.size() + 1;
         }
 
         @Override
         public Object getItem(int i) {
-            if(i == 0)return null;//Label
-            if(i == entries.size()+1)return null;//TODO save button
-            return entries.get(i - 1);
+
+            if(i == entries.size())return null;//TODO save button
+            return entries.get(i);
         }
 
         @Override
@@ -178,6 +201,7 @@ public class ScoreEdit extends AppCompatActivity {
 
                 }
             } else{
+                /*
                 if(i == 0){
                     view = inflater.inflate(R.layout.score_edit_label, null);
                     EditText lab = ((EditText) view.findViewById(R.id.editText));
@@ -204,6 +228,7 @@ public class ScoreEdit extends AppCompatActivity {
 
                     //TODO set the text to append a number if multiple of the same
                 } else{
+                */
                     view = inflater.inflate(R.layout.score_edit_done, null);
                     ((Button) view.findViewById(R.id.saveScore)).setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -211,7 +236,7 @@ public class ScoreEdit extends AppCompatActivity {
                             submit();
                         }
                     });//Return the button, and add the listener to it.
-                }
+                //}
 
             }
             return view;
