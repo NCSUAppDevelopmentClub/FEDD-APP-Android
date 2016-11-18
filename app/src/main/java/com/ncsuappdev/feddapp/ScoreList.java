@@ -70,6 +70,7 @@ public class ScoreList extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                entries.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     ScoreEntry e = new ScoreEntry();
                     e.judge = ds.getKey();

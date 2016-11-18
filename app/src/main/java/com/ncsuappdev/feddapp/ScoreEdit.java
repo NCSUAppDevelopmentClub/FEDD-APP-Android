@@ -16,6 +16,12 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +31,10 @@ public class ScoreEdit extends AppCompatActivity {
         int max;
         String label;
         int value;
+
+        public String toString() {
+            return label + ": " + max;
+        }
     }
     ArrayList<Entry> entries = new ArrayList<Entry>();
 
@@ -40,17 +50,26 @@ public class ScoreEdit extends AppCompatActivity {
         project = b.getString("project");
         team = b.getString("team");
         judge = b.getString("judge");
-        Entry e = new Entry();
-        e.max = 10;
-        e.value = 2;
-        e.label = "Im a category!";
-        Entry e2 = new Entry();
-        e2.max  = -1;
-        e2.value = 1;
-        e2.label = "Im a bonus category!";
 
-        entries.add(e);
-        entries.add(e2);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Projects/" + project);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                entries.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Entry e = new Entry();
+                    e.max = (int) (long) ds.child("max").getValue();
+                    e.label = (String) ds.child("name").getValue();
+                    entries.add(e);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         //list of entry rows, with size equal to the size of labels, which is the list of subcategories retrieved.
         list = (ListView) findViewById(R.id.entryList);
         list.setAdapter(new EditAdapter(this));
@@ -88,7 +107,7 @@ public class ScoreEdit extends AppCompatActivity {
             Object o = getItem(i);
             if(o instanceof Entry){
                 if(((Entry) o).max > 0) {
-                    if (view == null) view = inflater.inflate(R.layout.score_edit_row, null);
+                    view = inflater.inflate(R.layout.score_edit_row, null);
                     ((TextView) view.findViewById(R.id.category)).setText(((Entry) o).label);
                     NumberPicker picker = (NumberPicker) view.findViewById(R.id.score);
                     picker.setMinValue(0);
@@ -96,14 +115,14 @@ public class ScoreEdit extends AppCompatActivity {
                     picker.setMaxValue(((Entry) o).max);
                 } else{
                     //TODO not a number picker
-                    if (view == null) view = inflater.inflate(R.layout.score_edit_bonus, null);
+                    view = inflater.inflate(R.layout.score_edit_bonus, null);
                     ((TextView) view.findViewById(R.id.category)).setText("" + ((Entry) o).label);
                     ((EditText)view.findViewById(R.id.editText)).setText("" + ((Entry) o).value);
 
                 }
             } else{
                 if(i == 0){
-                    if(view == null) view = inflater.inflate(R.layout.score_edit_label, null);
+                    view = inflater.inflate(R.layout.score_edit_label, null);
                     EditText lab = ((EditText) view.findViewById(R.id.editText));
                     Log.e("HERE", lab.getText().toString());
                     if (!lab.getText().toString().equals(judge)) lab.setText(judge);
