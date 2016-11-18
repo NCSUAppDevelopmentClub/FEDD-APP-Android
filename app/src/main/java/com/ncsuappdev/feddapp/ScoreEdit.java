@@ -3,6 +3,7 @@ package com.ncsuappdev.feddapp;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,11 +24,13 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static android.R.attr.label;
 import static com.ncsuappdev.feddapp.Leaderboard3.tag;
 
 public class ScoreEdit extends AppCompatActivity {
@@ -80,7 +83,6 @@ public class ScoreEdit extends AppCompatActivity {
 
                 if (!edit) return;
 
-                Log.e(tag, "Teams/" + project + "/" + team + "/Scores/" + judge);
                 FirebaseDatabase.getInstance().getReference("Teams/" + project + "/" + team + "/Scores/" + judge)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -90,7 +92,6 @@ public class ScoreEdit extends AppCompatActivity {
                                     if (index >= 0 && index < entries.size())
                                         entries.get(index).value = (int) (long) ds.getValue();
                                 }
-                                Log.e(tag, entries.toString());
                                 ((BaseAdapter) list.getAdapter()).notifyDataSetChanged();
                             }
 
@@ -110,6 +111,19 @@ public class ScoreEdit extends AppCompatActivity {
         //list of entry rows, with size equal to the size of labels, which is the list of subcategories retrieved.
         list = (ListView) findViewById(R.id.entryList);
         list.setAdapter(new EditAdapter(this));
+    }
+
+    private void submit() {
+        if (edit) FirebaseDatabase.getInstance()
+                .getReference("Teams/" + project + "/" + team + "/Scores/" + oldKey)
+                .removeValue();
+        ArrayList list = new ArrayList();
+        for (int i = 0; i < entries.size(); i++)
+            list.add(entries.get(i).value);
+        FirebaseDatabase.getInstance()
+                .getReference("Teams/" + project + "/" + team + "/Scores/" + judge)
+                .setValue(list);
+        finish();
     }
 
     //TODO add save button to end of list
@@ -194,7 +208,7 @@ public class ScoreEdit extends AppCompatActivity {
                     ((Button) view.findViewById(R.id.saveScore)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //TODO do stuff
+                            submit();
                         }
                     });//Return the button, and add the listener to it.
                 }
