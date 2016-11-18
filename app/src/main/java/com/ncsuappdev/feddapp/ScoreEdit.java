@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -38,8 +39,12 @@ public class ScoreEdit extends AppCompatActivity {
         judge = b.getString("judge");
         Entry e = new Entry();
         e.max = 10;
+        e.value = 2;
+        e.label = "Im a category!";
         Entry e2 = new Entry();
         e2.max  = -1;
+        e2.value = 1;
+        e2.label = "Im a bonus category!";
 
         entries.add(e);
         entries.add(e2);
@@ -80,14 +85,16 @@ public class ScoreEdit extends AppCompatActivity {
             if(o instanceof Entry){
                 if(((Entry) o).max > 0) {
                     if (view == null) view = inflater.inflate(R.layout.score_edit_row, null);
-                    ((TextView) view.findViewById(R.id.category)).setText("Im a category!");
+                    ((TextView) view.findViewById(R.id.category)).setText(((Entry) o).label);
                     NumberPicker picker = (NumberPicker) view.findViewById(R.id.score);
                     picker.setMinValue(0);
+                    picker.setValue(((Entry) o).value);
                     picker.setMaxValue(((Entry) o).max);
                 } else{
                     //TODO not a number picker
                     if (view == null) view = inflater.inflate(R.layout.score_edit_bonus, null);
-                    ((TextView) view.findViewById(R.id.category)).setText("Im a bonus category!");
+                    ((TextView) view.findViewById(R.id.category)).setText("" + ((Entry) o).label);
+                    ((EditText)view.findViewById(R.id.editText)).setText("" + ((Entry) o).value);
 
                 }
             } else{
