@@ -3,9 +3,12 @@ package com.ncsuappdev.feddapp;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,13 +66,14 @@ public class ScoreEdit extends AppCompatActivity {
         }
         @Override
         public int getCount() {
-            return entries.size() + 1;
+            return entries.size() + 2;
         }
 
         @Override
         public Object getItem(int i) {
-            if(i == entries.size())return null;//TODO save button
-            return entries.get(i);
+            if(i == 0)return null;//Label
+            if(i == entries.size()+1)return null;//TODO save button
+            return entries.get(i - 1);
         }
 
         @Override
@@ -98,13 +102,41 @@ public class ScoreEdit extends AppCompatActivity {
 
                 }
             } else{
-                if(view == null) view = inflater.inflate(R.layout.score_edit_done, null);
-                ((Button) view.findViewById(R.id.saveScore)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //TODO do stuff
-                    }
-                });//Return the button, and add the listener to it.
+                if(i == 0){
+                    if(view == null) view = inflater.inflate(R.layout.score_edit_label, null);
+                    EditText lab = ((EditText) view.findViewById(R.id.editText));
+                    Log.e("HERE", lab.getText().toString());
+                    if (!lab.getText().toString().equals(judge)) lab.setText(judge);
+                    lab.setImeOptions(EditorInfo.IME_ACTION_DONE);
+                    lab.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                        @Override
+                        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                            if(i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT || i == EditorInfo.IME_ACTION_UNSPECIFIED){
+                                judge = textView.getText().toString();
+//                            return true;
+                            }
+                            return false;
+                            //return true;
+                        }
+                    });
+                    lab.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View view, boolean b) {
+                            judge = ((EditText)view).getText().toString();
+                        }
+                    });
+
+                    //TODO set the text to append a number if multiple of the same
+                } else{
+                    if(view == null) view = inflater.inflate(R.layout.score_edit_done, null);
+                    ((Button) view.findViewById(R.id.saveScore)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //TODO do stuff
+                        }
+                    });//Return the button, and add the listener to it.
+                }
+
             }
             return view;
         }
