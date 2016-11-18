@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         findViewById(R.id.signOutButton).setVisibility(View.INVISIBLE);
         findViewById(R.id.loginStatus).setVisibility(View.INVISIBLE);
         signedIn = false;
-        ((TextView) findViewById(R.id.loginStatus)).setText("Logged out");
         Auth.GoogleSignInApi.signOut(mGoogleApiClient);
     }
 

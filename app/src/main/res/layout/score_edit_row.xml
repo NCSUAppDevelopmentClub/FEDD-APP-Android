@@ -3,7 +3,7 @@
     android:layout_width="match_parent" android:layout_height="wrap_content">
 
     <TextView
-        android:text="Category Name"
+        android:text="Category Name lksdjflskjdflksjdflkjsdlkfjslkdjfslkdjflskjdflkjsdflksdlfkjsldkfj"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="false"
@@ -11,7 +11,8 @@
         android:layout_alignParentStart="false"
         android:id="@+id/category"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/numberPicker" />
+        android:layout_toLeftOf="@+id/score"
+        android:paddingRight="8dp" />
 
     <NumberPicker
         android:layout_width="wrap_content"
