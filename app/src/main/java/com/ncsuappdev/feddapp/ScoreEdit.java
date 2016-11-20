@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.annotation.IntegerRes;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -65,6 +67,9 @@ public class ScoreEdit extends AppCompatActivity {
         team = b.getString("team");
         edit = b.getBoolean("edit");
 
+        if (edit)
+            judge = oldKey = b.getString("judge");
+
         EditText lab = ((EditText) findViewById(R.id.editText2));
         Log.e("HERE", lab.getText().toString());
         if (!lab.getText().toString().equals(judge)) lab.setText(judge);
@@ -88,8 +93,7 @@ public class ScoreEdit extends AppCompatActivity {
         });
 
 
-        if (edit)
-            judge = oldKey = b.getString("judge");
+
 
         FirebaseDatabase.getInstance().getReference("Projects/" + project)
                 .addValueEventListener(new ValueEventListener() {
@@ -134,6 +138,7 @@ public class ScoreEdit extends AppCompatActivity {
         //list of entry rows, with size equal to the size of labels, which is the list of subcategories retrieved.
         list = (ListView) findViewById(R.id.entryList);
         list.setAdapter(new EditAdapter(this));
+        list.setItemsCanFocus(true);
     }
 
     private void submit() {
@@ -178,7 +183,7 @@ public class ScoreEdit extends AppCompatActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
 
 
-            Object o = getItem(i);
+            final Object o = getItem(i);
             if(o instanceof Entry){
                 if(((Entry) o).max > 0) {
                     view = inflater.inflate(R.layout.score_edit_row, null);
@@ -197,7 +202,50 @@ public class ScoreEdit extends AppCompatActivity {
                 } else{
                     view = inflater.inflate(R.layout.score_edit_bonus, null);
                     ((TextView) view.findViewById(R.id.category)).setText("" + ((Entry) o).label);
-                    ((EditText)view.findViewById(R.id.editText)).setText("" + ((Entry) o).value);
+                    final EditText et = ((EditText)view.findViewById(R.id.editText));
+
+                    et.setText("" + ((Entry) o).value);
+
+                    et.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            try {
+                                ((Entry) o).value = Integer.parseInt(et.getText().toString());
+                                et.setTextColor(Color.BLACK);
+
+                            }catch(Exception e){
+                                et.setTextColor(Color.RED);
+                            }
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+
+                        }
+                    });
+                    /**
+                    et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                        @Override
+                        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                            try {
+                                ((Entry) o).value = Integer.parseInt(et.getText().toString());
+                            }catch(Exception e){}
+                            return true;
+                        }
+                    });
+//                    et.setOnKeyListener(new View.OnKeyListener() {
+//                        @Override
+//                        public boolean onKey(View view, int i, KeyEvent keyEvent) {
+//
+//                            return false;
+//                        }
+//                    });
+*/
 
                 }
             } else{

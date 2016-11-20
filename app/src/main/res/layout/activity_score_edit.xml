@@ -24,7 +24,12 @@
         android:layout_alignParentRight="true"
         android:id="@+id/entryList"
         android:layout_above="@id/save"
-        android:layout_below="@+id/editText2" />
+        android:layout_below="@+id/editText2"
+
+        android:descendantFocusability="afterDescendants"
+        android:windowSoftInputMode="adjustResize"
+
+        />
 
     <View
         android:layout_width="match_parent"
