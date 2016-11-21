@@ -1,6 +1,8 @@
 package com.ncsuappdev.feddapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,12 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ButtonBarLayout;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -52,8 +56,6 @@ public class ScoreList extends AppCompatActivity {
          super.onCreateOptionsMenu(menu);
          MenuInflater inflater = getMenuInflater();
          inflater.inflate(R.menu.add_menu,  menu);
-//         menu.findItem(R.id.)
-//         Log.e("MEnu: ", menu.getItem(0).toString());
         return true;
      }
 
@@ -97,17 +99,64 @@ public class ScoreList extends AppCompatActivity {
         //TODO if  super user:
         dq.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
-                //Popup to confirm?
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(ScoreList.this);
+                builder1.setMessage("DQ " + teamName + "?");
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dqTeam();
+                                dialog.dismiss();
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
             }
         });
         publish.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 //popup to confirm?
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(ScoreList.this);
+                builder1.setMessage("Publish " + teamName + "? This will show their score on the public leaderboard.");
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                publishScore();
+                                dialog.dismiss();
+                            }
+                        });
+
+                builder1.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
             }
         });
         // TODO else: test if it wraps
-        dq.setVisibility(View.GONE);
-        publish.setVisibility(View.GONE);
+       if(!MainActivity.signedIn) {
+           dq.setVisibility(View.GONE);
+           publish.setVisibility(View.GONE);
+       }
         //TODO end else
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Teams/" + project + "/" + teamName + "/Scores");
@@ -133,6 +182,7 @@ public class ScoreList extends AppCompatActivity {
 
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(new ScoreListAdapter(this));
+        registerForContextMenu(list);
     }
 
     public class ScoreListAdapter extends BaseAdapter{
@@ -183,11 +233,41 @@ public class ScoreList extends AppCompatActivity {
             view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Log.e("LONG", "LONG!");
+                    Log.e("LONG", "Long click performed!"); //DONT DELETE THIS! for somereason the context menu only works with this
                     return false;
                 }
             });
             return view;
         }
+    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        if (v.getId()==R.id.list) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            menu.setHeaderTitle(entries.get(info.position).judge);
+            menu.add(Menu.NONE, 0, 0, "Delete");
+        }
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if(item.getTitle().equals("Delete")){
+            deleteEntry(((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position);
+        }
+        return false;
+    }
+
+    public void deleteEntry(int index){
+
+    }
+
+    public void dqTeam(){
+
+    }
+
+    public void publishScore(){
+
     }
 }
