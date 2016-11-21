@@ -54,6 +54,7 @@ public class ScoreList extends AppCompatActivity {
     String project;
     String teamName;
     TextView avScore;
+    TextView scoreStatus;
     boolean published = false, dqed = false;
 //
      @Override
@@ -206,10 +207,13 @@ public class ScoreList extends AppCompatActivity {
                             dqed = true;
                             publish.setEnabled(false);
                             dq.setText("undo dq");
+                            scoreStatus.setText("Disqualified");
                         } else {
                             dqed = false;
                             publish.setEnabled(true);
                             dq.setText("disqualify team");
+                            if (published) scoreStatus.setText("Score Published");
+                            else scoreStatus.setText("Score Pending");
                         }
                     }
 
@@ -221,7 +225,7 @@ public class ScoreList extends AppCompatActivity {
 
 
         avScore = (TextView) findViewById(R.id.average);
-
+        scoreStatus = (TextView) findViewById(R.id.scoreStatus);
 
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(new ScoreListAdapter(this));
@@ -304,7 +308,8 @@ public class ScoreList extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         if(item.getTitle().equals("Delete")){
-            deleteEntry(((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position);
+            if (published) cannotEdit();
+            else deleteEntry(((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position);
         }
         return false;
     }
