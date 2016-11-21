@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 signOut();
                 new AlertDialog.Builder(this)
                         .setMessage(email + "\nis not authorized")
+                        .setCancelable(true)
                         .setPositiveButton("OK", null)
                         .create().show();
             }

@@ -45,8 +45,15 @@ public class LeaderboardData implements ValueEventListener {
         for (DataSnapshot ds : snap.getChildren()) {
             list.add(ds.getKey());
             cat.clear();
-            for (DataSnapshot d : ds.getChildren())
-                cat.add(new Team(d.getKey(), d.getValue().toString(), ds.getKey()));
+            for (DataSnapshot d : ds.getChildren()) {
+                String score = d.getValue().toString();
+                try {
+                    int s = Integer.parseInt(score);
+                    if (s == -2) score = "DQ";
+                    else if (s < 0) score = "----";
+                } catch (Exception e) {}
+                cat.add(new Team(d.getKey(), score, ds.getKey()));
+            }
             Collections.sort(cat);
             list.addAll(cat);
         }
