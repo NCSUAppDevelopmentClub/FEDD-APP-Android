@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +18,13 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class Leaderboard3 extends AppCompatActivity {
     public static String tag = "Leaderboard3";
     public static Leaderboard3 instance;
     public ListView list;
+    boolean morning = true;
 
 
     @Override
@@ -32,6 +34,58 @@ public class Leaderboard3 extends AppCompatActivity {
 
         ActionBar bar = this.getSupportActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.RED));
+
+        //***************
+        ActionBar mActionBar = bar;
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater mInflater = LayoutInflater.from(this);
+
+        View v = mInflater.inflate(R.layout.toggle_menu, null);
+        final ToggleButton t1 = (ToggleButton)v.findViewById(R.id.morningButton);
+        t1.setBackgroundColor(Color.WHITE);
+        t1.setTextColor(Color.RED);
+        final ToggleButton t2 = (ToggleButton)v.findViewById(R.id.afternoonButton);
+        t2.setBackgroundColor(Color.RED);
+        t2.setTextColor(Color.WHITE);
+        final GradientDrawable deselectedBorder = new GradientDrawable();
+        deselectedBorder.setColor(0xFFFF0000); //white background
+        deselectedBorder.setStroke(2, 0xFFFFFFFF); //black border with full opacity
+        t2.setBackgroundDrawable(deselectedBorder);
+
+        t1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                morning = true;
+                t1.setChecked(true);
+                t1.setBackgroundColor(Color.WHITE);
+                t1.setTextColor(Color.RED);
+                t2.setChecked(false);
+                t2.setBackgroundDrawable(deselectedBorder);
+                t2.setTextColor(Color.WHITE);
+            }
+        });
+        t2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                morning = false;
+                t2.setChecked(true);
+                t2.setBackgroundColor(Color.WHITE);
+                t2.setTextColor(Color.RED);
+                t1.setChecked(false);
+                t1.setBackgroundDrawable(deselectedBorder);
+                t1.setTextColor(Color.WHITE);
+            }
+        });
+
+        ActionBar.LayoutParams p = new ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        p.gravity = Gravity.CENTER_HORIZONTAL;
+        bar.setCustomView(v, p);
+        bar.setDisplayShowCustomEnabled(true);
+
+
+
+        //****************
 
         list = (ListView) findViewById(R.id.list3);
         list.setAdapter(new LeaderboardAdapter(this));

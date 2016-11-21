@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RadioGroup android:id="@+id/toggleGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp">
+
+        <ToggleButton android:id="@+id/morningButton"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textOn="Morning"
+            android:textOff="Morning"
+            android:checked="true" />
+        <ToggleButton android:id="@+id/afternoonButton"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textOn="Afternoon"
+            android:textOff="Afternoon" />
+    </RadioGroup>
+</LinearLayout>

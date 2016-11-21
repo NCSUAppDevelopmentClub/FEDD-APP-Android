@@ -156,7 +156,7 @@ public class ScoreList extends AppCompatActivity {
                 alert11.show();
             }
         });
-        // TODO else: test if it wraps
+        // TODO else: toggle_menu if it wraps
        if(!MainActivity.signedIn) {
            dq.setVisibility(View.GONE);
            publish.setVisibility(View.GONE);
