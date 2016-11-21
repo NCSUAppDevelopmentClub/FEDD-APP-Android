@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,10 +81,12 @@ public class Leaderboard3 extends AppCompatActivity {
                 ((TextView) ((RelativeLayout) view).getChildAt(0).findViewById(R.id.teamScore)).setText(((LeaderboardData.Team) o).score);
                 view.findViewById(R.id.team).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.title).setVisibility(View.GONE);
+
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //TODO If authenticated, start actitivy
+                        Log.e(tag, "clicked on " + ((LeaderboardData.Team) o).name);
                         Intent i = new Intent(Leaderboard3.this, ScoreList.class)
                                 .putExtra("project", ((LeaderboardData.Team) o).project)
                                 .putExtra("team", ((LeaderboardData.Team) o).name);
