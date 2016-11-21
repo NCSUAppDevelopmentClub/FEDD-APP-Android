@@ -10,6 +10,19 @@
     android:paddingTop="5dp"
     tools:context="com.ncsuappdev.feddapp.MainActivity">
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signOutButton"
+        android:layout_toRightOf="@+id/signOutButton"
+        android:layout_toEndOf="@+id/signOutButton"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="128dp"
+        android:id="@+id/textView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
     <com.google.android.gms.common.SignInButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

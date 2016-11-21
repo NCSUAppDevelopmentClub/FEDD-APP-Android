@@ -54,13 +54,15 @@ public class ScoreList extends AppCompatActivity {
     String project;
     String teamName;
     TextView avScore;
+    TextView scoreStatus;
+    boolean published = false, dqed = false;
 //
      @Override
      public boolean onCreateOptionsMenu(Menu menu){
          super.onCreateOptionsMenu(menu);
          MenuInflater inflater = getMenuInflater();
          inflater.inflate(R.menu.add_menu,  menu);
-        return true;
+         return true;
      }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -69,6 +71,11 @@ public class ScoreList extends AppCompatActivity {
 
         if (id == R.id.mybutton) {
             //process your onClick here
+            if (published) {
+                cannotEdit();
+                return true;
+            }
+
             Intent i = new Intent(ScoreList.this, ScoreEdit.class);
             Bundle b = new Bundle();
             b.putString("project",project);
@@ -84,8 +91,6 @@ public class ScoreList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         setContentView(R.layout.activity_score_list);
 
@@ -104,7 +109,7 @@ public class ScoreList extends AppCompatActivity {
         dq.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(ScoreList.this);
-                builder1.setMessage("DQ " + teamName + "?");
+                builder1.setMessage((dqed ? "Undo disqualification of " : "Disqualify ") + teamName + "?");
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
@@ -132,7 +137,9 @@ public class ScoreList extends AppCompatActivity {
             public void onClick(View view){
                 //popup to confirm?
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(ScoreList.this);
-                builder1.setMessage("Publish " + teamName + "? This will show their score on the public leaderboard.");
+                builder1.setMessage(published
+                        ? "Hide " + teamName + "? This will remove their score from the public leaderboard."
+                        : "Publish " + teamName + "? This will show their score on the public leaderboard.");
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
@@ -184,9 +191,41 @@ public class ScoreList extends AppCompatActivity {
 
             }
         });
+        FirebaseDatabase.getInstance().getReference("Scores/" + project + "/" + teamName)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String score = "" + dataSnapshot.getValue();
+                        if (score.startsWith("-")) {
+                            published = false;
+                            publish.setText("publish score");
+                        } else {
+                            published = true;
+                            publish.setText("hide team score");
+                        }
+                        if (score.equals("-2")) {
+                            dqed = true;
+                            publish.setEnabled(false);
+                            dq.setText("undo dq");
+                            scoreStatus.setText("Disqualified");
+                        } else {
+                            dqed = false;
+                            publish.setEnabled(true);
+                            dq.setText("disqualify team");
+                            if (published) scoreStatus.setText("Score Published");
+                            else scoreStatus.setText("Score Pending");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
 
         avScore = (TextView) findViewById(R.id.average);
-
+        scoreStatus = (TextView) findViewById(R.id.scoreStatus);
 
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(new ScoreListAdapter(this));
@@ -229,6 +268,11 @@ public class ScoreList extends AppCompatActivity {
 
                 @Override
                 public void onClick(View view) {
+                    if (published) {
+                        cannotEdit();
+                        return;
+                    }
+
                     Intent i = new Intent(ScoreList.this, ScoreEdit.class);
                     Bundle b = new Bundle();
                     b.putString("project",project);
@@ -264,12 +308,14 @@ public class ScoreList extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         if(item.getTitle().equals("Delete")){
-            deleteEntry(((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position);
+            if (published) cannotEdit();
+            else deleteEntry(((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position);
         }
         return false;
     }
     public void calculateScore(){
         average = 0;
+        if (entries.size() == 0) return;
         for(ScoreEntry e: entries){
             average += e.score;
         }
@@ -277,15 +323,43 @@ public class ScoreList extends AppCompatActivity {
         avScore.setText("Current Score: " + average);
     }
 
-    public void deleteEntry(int index){
-
+    public void deleteEntry(int index) {
+        FirebaseDatabase.getInstance()
+                .getReference("Teams/" + project + "/" + teamName + "/Scores/" + entries.get(index).judge)
+                .removeValue();
     }
 
-    public void dqTeam(){
-
+    public void dqTeam() {
+        if (dqed) {
+            FirebaseDatabase.getInstance()
+                    .getReference("Scores/" + project + "/" + teamName)
+                    .setValue(-1);
+        } else {
+            FirebaseDatabase.getInstance()
+                    .getReference("Scores/" + project + "/" + teamName)
+                    .setValue(-2);
+        }
     }
 
-    public void publishScore(){
+    public void publishScore() {
+        if (!published) {
+            calculateScore();
+            FirebaseDatabase.getInstance()
+                    .getReference("Scores/" + project + "/" + teamName)
+                    .setValue(average);
+        } else {
+            FirebaseDatabase.getInstance()
+                    .getReference("Scores/" + project + "/" + teamName)
+                    .setValue(-1);
+        }
+    }
 
+    public void cannotEdit() {
+        new AlertDialog.Builder(this)
+                .setMessage("Cannot edit scores while team is published to the leaderboard. " +
+                        "Please hide the team's score first.")
+                .setCancelable(true)
+                .setPositiveButton("OK", null)
+                .create().show();
     }
 }
