@@ -177,7 +177,13 @@ public class ScoreList extends AppCompatActivity {
                     //Intent to load score edit
                 }
             });
-
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Log.e("LONG", "LONG!");
+                    return false;
+                }
+            });
             return view;
         }
     }
