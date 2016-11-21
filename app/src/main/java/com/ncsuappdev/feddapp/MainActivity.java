@@ -1,5 +1,6 @@
 package com.ncsuappdev.feddapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -106,7 +107,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 startActivityForResult(signInIntent, RC_SIGN_IN);
                 break;
             case R.id.signOutButton:
-                signOut();
+                new AlertDialog.Builder(this)
+                        .setCancelable(true)
+                        .setMessage("Are you sure you want to sign out?")
+                        .setNeutralButton("No", null)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                signOut();
+                            }
+                        }).create().show();
                 break;
         }
     }

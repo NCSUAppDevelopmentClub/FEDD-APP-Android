@@ -57,6 +57,7 @@ public class Leaderboard3 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 morning = true;
+                ((BaseAdapter) list.getAdapter()).notifyDataSetChanged();
                 t1.setChecked(true);
                 t1.setBackgroundColor(Color.WHITE);
                 t1.setTextColor(Color.RED);
@@ -69,6 +70,7 @@ public class Leaderboard3 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 morning = false;
+                ((BaseAdapter) list.getAdapter()).notifyDataSetChanged();
                 t2.setChecked(true);
                 t2.setBackgroundColor(Color.WHITE);
                 t2.setTextColor(Color.RED);
@@ -78,9 +80,10 @@ public class Leaderboard3 extends AppCompatActivity {
             }
         });
 
-        ActionBar.LayoutParams p = new ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        ActionBar.LayoutParams p = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
         p.gravity = Gravity.CENTER_HORIZONTAL;
         bar.setCustomView(v, p);
+//        bar.setCustomView(v);
         bar.setDisplayShowCustomEnabled(true);
 
 
@@ -103,7 +106,7 @@ public class Leaderboard3 extends AppCompatActivity {
         }
 
         public int getCount(){
-            return LeaderboardData.getInstance().list.size();
+            return (morning ? LeaderboardData.getInstance().morning : LeaderboardData.getInstance().afternoon).size();
         }
 
         @Override
@@ -131,7 +134,7 @@ public class Leaderboard3 extends AppCompatActivity {
         public View getView(int position, View view, ViewGroup parent) {
             if (view == null) view = inflater.inflate(R.layout.leaderboard_row, null);
 
-            final Object o = LeaderboardData.getInstance().list.get(position);
+            final Object o = (morning ? LeaderboardData.getInstance().morning : LeaderboardData.getInstance().afternoon).get(position);
             if (o instanceof LeaderboardData.Team) {
                 ((TextView) ((RelativeLayout) view).getChildAt(0).findViewById(R.id.teamName)).setText(((LeaderboardData.Team) o).name);
                 ((TextView) ((RelativeLayout) view).getChildAt(0).findViewById(R.id.teamScore)).setText(((LeaderboardData.Team) o).score);
@@ -151,7 +154,8 @@ public class Leaderboard3 extends AppCompatActivity {
                         if (!MainActivity.signedIn) return;
                         Intent i = new Intent(Leaderboard3.this, ScoreList.class)
                                 .putExtra("project", ((LeaderboardData.Team) o).project)
-                                .putExtra("team", ((LeaderboardData.Team) o).name);
+                                .putExtra("team", ((LeaderboardData.Team) o).name)
+                                .putExtra("morning", morning);
                         startActivity(i);
                     }
                 });

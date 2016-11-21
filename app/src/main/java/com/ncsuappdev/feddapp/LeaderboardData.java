@@ -16,19 +16,40 @@ import java.util.Collections;
  * Created by Duncan on 11/9/2016.
  */
 
-public class LeaderboardData implements ValueEventListener {
+public class LeaderboardData {
     private static LeaderboardData instance;
     private static final String tag = "leaderboard data";
 
     /** List with String headers and Team entries */
-    public ArrayList list;
-
-    private DatabaseReference ref;
+    public ArrayList morning, afternoon;
 
     private LeaderboardData() {
-        ref = FirebaseDatabase.getInstance().getReference("Scores");
-        ref.addValueEventListener(this);
-        list = new ArrayList();
+        morning = new ArrayList();
+        afternoon = new ArrayList();
+        FirebaseDatabase.getInstance().getReference("Morning Scores")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        LeaderboardData.this.onDataChange(dataSnapshot, morning);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        FirebaseDatabase.getInstance().getReference("Afternoon Scores")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        LeaderboardData.this.onDataChange(dataSnapshot, afternoon);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     public static void initialize() {
@@ -39,7 +60,7 @@ public class LeaderboardData implements ValueEventListener {
         return instance;
     }
 
-    public void onDataChange(DataSnapshot snap) {
+    public void onDataChange(DataSnapshot snap, ArrayList list) {
         list.clear();
         ArrayList<Team> cat = new ArrayList<Team>();
         for (DataSnapshot ds : snap.getChildren()) {
