@@ -32,6 +32,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import static com.ncsuappdev.feddapp.Leaderboard3.tag;
@@ -48,8 +50,10 @@ public class ScoreList extends AppCompatActivity {
     public ListView list;
     public Button dq;
     public Button publish;
+    double average = 0;
     String project;
     String teamName;
+    TextView avScore;
 //
      @Override
      public boolean onCreateOptionsMenu(Menu menu){
@@ -172,6 +176,7 @@ public class ScoreList extends AppCompatActivity {
                     entries.add(e);
                 }
                 ((BaseAdapter) list.getAdapter()).notifyDataSetChanged();
+                calculateScore();
             }
 
             @Override
@@ -180,9 +185,14 @@ public class ScoreList extends AppCompatActivity {
             }
         });
 
+        avScore = (TextView) findViewById(R.id.average);
+
+
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(new ScoreListAdapter(this));
         registerForContextMenu(list);
+
+
     }
 
     public class ScoreListAdapter extends BaseAdapter{
@@ -257,6 +267,14 @@ public class ScoreList extends AppCompatActivity {
             deleteEntry(((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position);
         }
         return false;
+    }
+    public void calculateScore(){
+        average = 0;
+        for(ScoreEntry e: entries){
+            average += e.score;
+        }
+        average /= entries.size();
+        avScore.setText("Current Score: " + average);
     }
 
     public void deleteEntry(int index){
