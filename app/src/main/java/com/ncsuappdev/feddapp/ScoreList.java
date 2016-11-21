@@ -125,6 +125,7 @@ public class ScoreList extends AppCompatActivity {
                         "No",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+
                                 dialog.dismiss();
                             }
                         });

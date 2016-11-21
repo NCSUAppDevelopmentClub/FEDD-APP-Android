@@ -1,6 +1,8 @@
 package com.ncsuappdev.feddapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.ContactsContract;
@@ -70,10 +72,26 @@ public class ScoreEdit extends AppCompatActivity {
         if (edit)
             judge = oldKey = b.getString("judge");
 
-        EditText lab = ((EditText) findViewById(R.id.editText2));
+        final EditText lab = ((EditText) findViewById(R.id.editText2));
         Log.e("HERE", lab.getText().toString());
         if (!lab.getText().toString().equals(judge)) lab.setText(judge);
         lab.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        lab.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                judge = lab.getText().toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         lab.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -228,60 +246,59 @@ public class ScoreEdit extends AppCompatActivity {
 
                         }
                     });
-                    /**
-                    et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                        @Override
-                        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                            try {
-                                ((Entry) o).value = Integer.parseInt(et.getText().toString());
-                            }catch(Exception e){}
-                            return true;
-                        }
-                    });
-//                    et.setOnKeyListener(new View.OnKeyListener() {
-//                        @Override
-//                        public boolean onKey(View view, int i, KeyEvent keyEvent) {
-//
-//                            return false;
-//                        }
-//                    });
-*/
 
                 }
             } else{
-                /*
-                if(i == 0){
-                    view = inflater.inflate(R.layout.score_edit_label, null);
-                    EditText lab = ((EditText) view.findViewById(R.id.editText));
-                    Log.e("HERE", lab.getText().toString());
-                    if (!lab.getText().toString().equals(judge)) lab.setText(judge);
-                    lab.setImeOptions(EditorInfo.IME_ACTION_DONE);
-                    lab.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                        @Override
-                        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                            if(i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT || i == EditorInfo.IME_ACTION_UNSPECIFIED){
-                                judge = textView.getText().toString();
-//                            return true;
-                            }
-                            return false;
-                            //return true;
-                        }
-                    });
-                    lab.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View view, boolean b) {
-                            judge = ((EditText)view).getText().toString();
-                        }
-                    });
 
-                    //TODO set the text to append a number if multiple of the same
-                } else{
-                */
                     view = inflater.inflate(R.layout.score_edit_done, null);
                     ((Button) view.findViewById(R.id.saveScore)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            submit();
+                            if(judge == null || judge.isEmpty() ){
+                                AlertDialog.Builder builder1 = new AlertDialog.Builder(ScoreEdit.this);
+                                builder1.setMessage("Please enter a score label at the top.");
+                                builder1.setCancelable(false);
+                                builder1.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+                            } else if(!edit){
+                                FirebaseDatabase.getInstance().getReference("Teams/" + project + "/" + team + "/Scores").child(judge).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.exists()) {
+                                            AlertDialog.Builder builder1 = new AlertDialog.Builder(ScoreEdit.this);
+                                            builder1.setMessage("Score exists!");
+                                            builder1.setCancelable(false);
+                                            builder1.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    dialogInterface.dismiss();
+                                                }
+                                            });
+
+                                            AlertDialog alert11 = builder1.create();
+                                            alert11.show();
+                                        } else{
+
+                                            submit();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+                            }
+
                         }
                     });//Return the button, and add the listener to it.
                 //}
