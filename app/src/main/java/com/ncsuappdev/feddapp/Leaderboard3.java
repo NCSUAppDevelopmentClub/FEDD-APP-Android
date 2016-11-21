@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -81,12 +83,18 @@ public class Leaderboard3 extends AppCompatActivity {
                 ((TextView) ((RelativeLayout) view).getChildAt(0).findViewById(R.id.teamScore)).setText(((LeaderboardData.Team) o).score);
                 view.findViewById(R.id.team).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.title).setVisibility(View.GONE);
-
+                if (MainActivity.signedIn) {
+                    if (Build.VERSION.SDK_INT >= 16) {
+                        Drawable bg = obtainStyledAttributes(new int[] {R.attr.selectableItemBackground}).getDrawable(0);
+                        view.setBackground(bg);
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT >= 16) view.setBackground(new ColorDrawable(Color.WHITE));
+                }
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //TODO If authenticated, start actitivy
-                        Log.e(tag, "clicked on " + ((LeaderboardData.Team) o).name);
+                        if (!MainActivity.signedIn) return;
                         Intent i = new Intent(Leaderboard3.this, ScoreList.class)
                                 .putExtra("project", ((LeaderboardData.Team) o).project)
                                 .putExtra("team", ((LeaderboardData.Team) o).name);

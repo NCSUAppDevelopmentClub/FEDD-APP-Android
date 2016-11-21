@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -162,6 +163,8 @@ public class ScoreList extends AppCompatActivity {
             ((TextView) ((RelativeLayout) view).findViewById(R.id.teamName)).setText(o.judge);
             ((TextView) ((RelativeLayout) view).findViewById(R.id.teamScore)).setText(o.score + "");
 
+            if (Build.VERSION.SDK_INT >= 16)
+                view.setBackground(obtainStyledAttributes(new int[] {R.attr.selectableItemBackground}).getDrawable(0));
             view.setOnClickListener(new View.OnClickListener(){
 
                 @Override
