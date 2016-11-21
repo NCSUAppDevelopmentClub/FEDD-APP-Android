@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -20,8 +21,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, ResultCallback<GoogleSignInResult> {
     private static final int RC_SIGN_IN = 0;
@@ -30,8 +36,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private SignInButton signInButton;
     private Button signOutButton;
     private Button deleteThis;
-    private boolean signedIn = false;
-
+    public static boolean signedIn = false;
+    public static String email;
+    private ArrayList<String> validEmails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +56,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-        Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient).setResultCallback(this);
+
+        Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient).setResultCallback(MainActivity.this);
+
+        FirebaseDatabase.getInstance().getReference("Emails")
+                .addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                validEmails = new ArrayList<String>();
+                for (DataSnapshot ds : dataSnapshot.getChildren())
+                    validEmails.add((String) ds.getValue());
+                if (signedIn && !validEmails.contains(email)) {
+                    Log.e(tag, "undoing silent sign in");
+                    signOut();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         LeaderboardData.initialize();
 
@@ -57,6 +84,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         signOutButton.setOnClickListener(this);
         signInButton = (SignInButton) findViewById(R.id.signInButton);
         signInButton.setOnClickListener(this);
+
+        signOutButton.setVisibility(View.INVISIBLE);
+        findViewById(R.id.loginStatus).setVisibility(View.INVISIBLE);
 
         deleteThis = (Button) findViewById(R.id.button2);
         deleteThis.setOnClickListener(new View.OnClickListener() {
@@ -84,20 +114,39 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_SIGN_IN) {
-            onResult(Auth.GoogleSignInApi.getSignInResultFromIntent(data));
+            handleSignIn(Auth.GoogleSignInApi.getSignInResultFromIntent(data), false);
         }
     }
 
     @Override
     public void onResult(@NonNull GoogleSignInResult result) {
-//        Log.e(tag, result.getSignInAccount()+"");
+        handleSignIn(result, true);
+    }
+
+    public void handleSignIn(GoogleSignInResult result, boolean silent) {
         if (result.isSuccess()) {
-            Log.e(tag, "logged in with " + result.getSignInAccount().getEmail());
-            findViewById(R.id.signInButton).setVisibility(View.INVISIBLE);
-            findViewById(R.id.signOutButton).setVisibility(View.VISIBLE);
-            findViewById(R.id.loginStatus).setVisibility(View.VISIBLE);
-            signedIn = true;
-            ((TextView) findViewById(R.id.loginStatus)).setText(result.getSignInAccount().getEmail() + "\nBasic User");
+            String email = result.getSignInAccount().getEmail();
+            if (validEmails == null && !silent) {
+                signOut();
+                new AlertDialog.Builder(this)
+                        .setMessage("Failed to contact server.")
+                        .setPositiveButton("OK", null)
+                        .create().show();
+            } else if (silent || validEmails.contains(email)) {
+                Log.e(tag, "logged in with " + result.getSignInAccount().getEmail());
+                findViewById(R.id.signInButton).setVisibility(View.INVISIBLE);
+                findViewById(R.id.signOutButton).setVisibility(View.VISIBLE);
+                findViewById(R.id.loginStatus).setVisibility(View.VISIBLE);
+                signedIn = true;
+                MainActivity.email = email;
+                ((TextView) findViewById(R.id.loginStatus)).setText(result.getSignInAccount().getEmail());
+            } else {
+                signOut();
+                new AlertDialog.Builder(this)
+                        .setMessage(email + "\nis not authorized")
+                        .setPositiveButton("OK", null)
+                        .create().show();
+            }
         } else {
             Log.e(tag, "login failed");
             signOut();
