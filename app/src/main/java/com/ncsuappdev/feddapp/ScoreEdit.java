@@ -69,11 +69,13 @@ public class ScoreEdit extends AppCompatActivity {
         team = b.getString("team");
         edit = b.getBoolean("edit");
 
+        getSupportActionBar().setTitle("Score Entry");
+
         if (edit)
             judge = oldKey = b.getString("judge");
 
         final EditText lab = ((EditText) findViewById(R.id.editText2));
-        Log.e("HERE", lab.getText().toString());
+//        Log.e("HERE", lab.getText().toString());
         if (!lab.getText().toString().equals(judge)) lab.setText(judge);
         lab.setImeOptions(EditorInfo.IME_ACTION_DONE);
         lab.addTextChangedListener(new TextWatcher() {
@@ -285,7 +287,6 @@ public class ScoreEdit extends AppCompatActivity {
                                             AlertDialog alert11 = builder1.create();
                                             alert11.show();
                                         } else{
-
                                             submit();
                                         }
                                     }
@@ -297,7 +298,7 @@ public class ScoreEdit extends AppCompatActivity {
                                 });
 
 
-                            }
+                            } else submit();
 
                         }
                     });//Return the button, and add the listener to it.

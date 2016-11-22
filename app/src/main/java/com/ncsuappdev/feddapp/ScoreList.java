@@ -290,7 +290,7 @@ public class ScoreList extends AppCompatActivity {
             view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Log.e("LONG", "Long click performed!"); //DONT DELETE THIS! for somereason the context menu only works with this
+//                    Log.e("LONG", "Long click performed!"); //DONT DELETE THIS! for somereason the context menu only works with this
                     return false;
                 }
             });

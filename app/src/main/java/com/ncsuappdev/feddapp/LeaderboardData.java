@@ -125,6 +125,6 @@ public class LeaderboardData {
     }
 
     public void onCancelled(DatabaseError databaseError) {
-        Log.e(tag, "leaderboard disconnected");
+//        Log.e(tag, "leaderboard disconnected");
     }
 }
