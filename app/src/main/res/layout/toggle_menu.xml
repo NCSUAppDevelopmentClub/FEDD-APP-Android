@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:layout_gravity="fill_vertical|fill_horizontal">
 
@@ -17,20 +18,20 @@
             android:textOn="Morning"
             android:textOff="Morning"
             android:checked="true"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"/>
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"/>
         <ToggleButton android:id="@+id/afternoonButton"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:textSize="14sp"
             android:textOn="Afternoon"
             android:textOff="Afternoon"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"/>
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"/>
     </RadioGroup>
 
 </RelativeLayout>

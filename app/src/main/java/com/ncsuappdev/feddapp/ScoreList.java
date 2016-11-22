@@ -57,7 +57,7 @@ public class ScoreList extends AppCompatActivity {
     TextView avScore;
     TextView scoreStatus;
     boolean published = false, dqed = false;
-//
+
      @Override
      public boolean onCreateOptionsMenu(Menu menu){
          super.onCreateOptionsMenu(menu);

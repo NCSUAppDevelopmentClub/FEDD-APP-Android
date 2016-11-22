@@ -17,8 +17,10 @@
         </activity>
         <activity android:name=".Leaderboard3" />
         <activity android:name=".ScoreList" />
-        <activity android:name=".ScoreEdit" android:windowSoftInputMode="adjustPan"></activity>
-
+        <activity
+            android:name=".ScoreEdit"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".AddTeam"></activity>
     </application>
 
 </manifest>

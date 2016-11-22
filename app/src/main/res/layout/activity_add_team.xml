@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_add_team"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.ncsuappdev.feddapp.AddTeam">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time: "
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@android:color/black"
+        android:id="@+id/timeLabel"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:paddingRight="8dp"
+        android:textSize="16dp"
+        android:paddingBottom="1dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/projectLabel"
+        android:text="Project:"
+        android:paddingRight="8dp"
+        android:layout_below="@id/timeLabel"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textColor="@android:color/black"
+        android:textSize="16dp"
+        android:paddingBottom="1dp"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name:"
+        android:id="@+id/nameLabel"
+        android:paddingRight="8dp"
+        android:layout_below="@id/projectLabel"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textColor="@android:color/black"
+        android:textSize="16dp"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="12dp"
+        />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/projectSpinner"
+        android:layout_alignBottom="@+id/projectLabel"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/projectLabel"
+        android:layout_toRightOf="@id/projectLabel"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/timeSpinner"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/timeLabel"
+        android:layout_alignBottom="@id/timeLabel"
+        android:layout_toRightOf="@id/timeLabel"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:ems="10"
+        android:inputType="text"
+        android:layout_toRightOf="@id/nameLabel"
+        android:layout_alignBottom="@id/nameLabel"
+        android:layout_alignParentRight="true"
+        android:id="@+id/teamName"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/createTeam"
+        android:text="create"
+        />
+
+</RelativeLayout>

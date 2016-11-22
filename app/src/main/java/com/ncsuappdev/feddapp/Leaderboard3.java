@@ -1,30 +1,42 @@
 package com.ncsuappdev.feddapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.Image;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Leaderboard3 extends AppCompatActivity {
     public static String tag = "Leaderboard3";
     public static Leaderboard3 instance;
     public ListView list;
     boolean morning = true;
+
 
 
     @Override
@@ -94,6 +106,31 @@ public class Leaderboard3 extends AppCompatActivity {
         list.setAdapter(new LeaderboardAdapter(this));
 
         instance = this;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        if (MainActivity.signedIn) {
+            super.onCreateOptionsMenu(menu);
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.add_menu, menu);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.mybutton) {
+            Intent i = new Intent(Leaderboard3.this, AddTeam.class)
+                    .putExtra("morning", morning);
+            startActivity(i);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public  class LeaderboardAdapter extends BaseAdapter {
