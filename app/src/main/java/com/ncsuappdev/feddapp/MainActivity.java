@@ -96,6 +96,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 startActivity(i);
             }
         });
+
+        Button button3 = (Button) findViewById(R.id.button3);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, ProjectSelect.class);
+                startActivity(i);
+            }
+        });
     }
 
     @Override
