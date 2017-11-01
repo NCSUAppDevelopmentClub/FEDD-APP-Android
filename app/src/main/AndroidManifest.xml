@@ -20,6 +20,7 @@
         <activity
             android:name=".ScoreEdit"
             android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".AddTeam"></activity>
         <activity android:name=".ProjectSelect"></activity>
     </application>
 

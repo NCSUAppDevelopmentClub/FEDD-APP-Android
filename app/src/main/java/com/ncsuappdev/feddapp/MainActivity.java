@@ -1,5 +1,6 @@
 package com.ncsuappdev.feddapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 for (DataSnapshot ds : dataSnapshot.getChildren())
                     validEmails.add((String) ds.getValue());
                 if (signedIn && !validEmails.contains(email)) {
-                    Log.e(tag, "undoing silent sign in");
+//                    Log.e(tag, "undoing silent sign in");
                     signOut();
                 }
             }
@@ -115,7 +116,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 startActivityForResult(signInIntent, RC_SIGN_IN);
                 break;
             case R.id.signOutButton:
-                signOut();
+                new AlertDialog.Builder(this)
+                        .setCancelable(true)
+                        .setMessage("Are you sure you want to sign out?")
+                        .setNeutralButton("No", null)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                signOut();
+                            }
+                        }).create().show();
                 break;
         }
     }
@@ -142,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         .setPositiveButton("OK", null)
                         .create().show();
             } else if (silent || validEmails.contains(email)) {
-                Log.e(tag, "logged in with " + result.getSignInAccount().getEmail());
+//                Log.e(tag, "logged in with " + result.getSignInAccount().getEmail());
                 findViewById(R.id.signInButton).setVisibility(View.INVISIBLE);
                 findViewById(R.id.signOutButton).setVisibility(View.VISIBLE);
                 findViewById(R.id.loginStatus).setVisibility(View.VISIBLE);
@@ -158,13 +168,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         .create().show();
             }
         } else {
-            Log.e(tag, "login failed");
+//            Log.e(tag, "login failed");
             signOut();
         }
     }
 
     private void signOut() {
-        Log.e(tag, "sign out");
+//        Log.e(tag, "sign out");
         findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
         findViewById(R.id.signOutButton).setVisibility(View.INVISIBLE);
         findViewById(R.id.loginStatus).setVisibility(View.INVISIBLE);
@@ -174,6 +184,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.e(tag, "connection failed");
+//        Log.e(tag, "connection failed");
     }
 }

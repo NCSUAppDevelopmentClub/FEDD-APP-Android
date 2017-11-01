@@ -69,11 +69,13 @@ public class ScoreEdit extends AppCompatActivity {
         team = b.getString("team");
         edit = b.getBoolean("edit");
 
+        getSupportActionBar().setTitle("Score Entry");
+
         if (edit)
             judge = oldKey = b.getString("judge");
 
         final EditText lab = ((EditText) findViewById(R.id.editText2));
-        Log.e("HERE", lab.getText().toString());
+//        Log.e("HERE", lab.getText().toString());
         if (!lab.getText().toString().equals(judge)) lab.setText(judge);
         lab.setImeOptions(EditorInfo.IME_ACTION_DONE);
         lab.addTextChangedListener(new TextWatcher() {
@@ -167,7 +169,7 @@ public class ScoreEdit extends AppCompatActivity {
         for (int i = 0; i < entries.size(); i++)
             list.add(entries.get(i).value);
         FirebaseDatabase.getInstance()
-                .getReference("Teams/" + project + "/" + team + "/Scores/" + judge)
+                .getReference("Teams/" + project + "/" + team + "/Scores/" + judge.trim())
                 .setValue(list);
         finish();
     }
@@ -254,7 +256,7 @@ public class ScoreEdit extends AppCompatActivity {
                     ((Button) view.findViewById(R.id.saveScore)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if(judge == null || judge.isEmpty() ){
+                            if(judge == null || judge.trim().isEmpty() ){
                                 AlertDialog.Builder builder1 = new AlertDialog.Builder(ScoreEdit.this);
                                 builder1.setMessage("Please enter a score label at the top.");
                                 builder1.setCancelable(false);
@@ -268,12 +270,12 @@ public class ScoreEdit extends AppCompatActivity {
                                 AlertDialog alert11 = builder1.create();
                                 alert11.show();
                             } else if(!edit){
-                                FirebaseDatabase.getInstance().getReference("Teams/" + project + "/" + team + "/Scores").child(judge).addListenerForSingleValueEvent(new ValueEventListener() {
+                                FirebaseDatabase.getInstance().getReference("Teams/" + project + "/" + team + "/Scores").child(judge.trim()).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         if(dataSnapshot.exists()) {
                                             AlertDialog.Builder builder1 = new AlertDialog.Builder(ScoreEdit.this);
-                                            builder1.setMessage("Score exists!");
+                                            builder1.setMessage("Score label exists. Please change the label.");
                                             builder1.setCancelable(false);
                                             builder1.setNeutralButton("OK", new DialogInterface.OnClickListener() {
                                                 @Override
@@ -285,7 +287,6 @@ public class ScoreEdit extends AppCompatActivity {
                                             AlertDialog alert11 = builder1.create();
                                             alert11.show();
                                         } else{
-
                                             submit();
                                         }
                                     }
@@ -297,7 +298,7 @@ public class ScoreEdit extends AppCompatActivity {
                                 });
 
 
-                            }
+                            } else submit();
 
                         }
                     });//Return the button, and add the listener to it.

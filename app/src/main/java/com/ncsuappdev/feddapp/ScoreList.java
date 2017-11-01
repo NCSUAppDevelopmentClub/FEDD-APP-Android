@@ -53,10 +53,11 @@ public class ScoreList extends AppCompatActivity {
     double average = 0;
     String project;
     String teamName;
+    boolean morning;
     TextView avScore;
     TextView scoreStatus;
     boolean published = false, dqed = false;
-//
+
      @Override
      public boolean onCreateOptionsMenu(Menu menu){
          super.onCreateOptionsMenu(menu);
@@ -96,6 +97,7 @@ public class ScoreList extends AppCompatActivity {
 
         project = getIntent().getStringExtra("project");
         teamName = getIntent().getStringExtra("team");
+        morning = getIntent().getBooleanExtra("morning", false);
 
         ActionBar bar = this.getSupportActionBar();
         bar.setTitle(teamName);
@@ -192,7 +194,7 @@ public class ScoreList extends AppCompatActivity {
 
             }
         });
-        FirebaseDatabase.getInstance().getReference("Scores/" + project + "/" + teamName)
+        FirebaseDatabase.getInstance().getReference(scoreTable() + project + "/" + teamName)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -288,7 +290,7 @@ public class ScoreList extends AppCompatActivity {
             view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    Log.e("LONG", "Long click performed!"); //DONT DELETE THIS! for somereason the context menu only works with this
+//                    Log.e("LONG", "Long click performed!"); //DONT DELETE THIS! for somereason the context menu only works with this
                     return false;
                 }
             });
@@ -333,11 +335,11 @@ public class ScoreList extends AppCompatActivity {
     public void dqTeam() {
         if (dqed) {
             FirebaseDatabase.getInstance()
-                    .getReference("Scores/" + project + "/" + teamName)
+                    .getReference(scoreTable() + project + "/" + teamName)
                     .setValue(-1);
         } else {
             FirebaseDatabase.getInstance()
-                    .getReference("Scores/" + project + "/" + teamName)
+                    .getReference(scoreTable() + project + "/" + teamName)
                     .setValue(-2);
         }
     }
@@ -346,13 +348,17 @@ public class ScoreList extends AppCompatActivity {
         if (!published) {
             calculateScore();
             FirebaseDatabase.getInstance()
-                    .getReference("Scores/" + project + "/" + teamName)
+                    .getReference(scoreTable() + project + "/" + teamName)
                     .setValue(average);
         } else {
             FirebaseDatabase.getInstance()
-                    .getReference("Scores/" + project + "/" + teamName)
+                    .getReference(scoreTable() + project + "/" + teamName)
                     .setValue(-1);
         }
+    }
+
+    public String scoreTable() {
+        return (morning ? "Morning" : "Afternoon") + " Scores/";
     }
 
     public void cannotEdit() {
