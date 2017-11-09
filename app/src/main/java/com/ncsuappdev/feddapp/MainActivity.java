@@ -63,12 +63,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient).setResultCallback(MainActivity.this);
 
 
-        try {
+     //   try {
+            FirebaseApp.initializeApp(this);
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             ;
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+       // }catch(Exception e){
+        //    e.printStackTrace();
+       // }
 
      //   FirebaseApp.initializeApp(this);
         /*

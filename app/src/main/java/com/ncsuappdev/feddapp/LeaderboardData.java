@@ -61,7 +61,7 @@ public class LeaderboardData {
     public static LeaderboardData getInstance() {
         return instance;
     }
-
+//This is going to change to only care about the current project
     public void onDataChange(DataSnapshot snap, ArrayList list) {
         list.clear();
         ArrayList<Team> cat = new ArrayList<Team>();

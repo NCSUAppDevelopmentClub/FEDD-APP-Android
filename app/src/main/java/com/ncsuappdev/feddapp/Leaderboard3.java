@@ -197,7 +197,7 @@ public class Leaderboard3 extends AppCompatActivity {
                     public void onClick(View view) {
                         if (!MainActivity.signedIn) return;
                         Intent i = new Intent(Leaderboard3.this, ScoreList.class)
-                                .putExtra("project", ((LeaderboardData.Team) o).project)
+                                .putExtra("project", project)
                                 .putExtra("team", ((LeaderboardData.Team) o).name)
                                 .putExtra("morning", morning);
                         startActivity(i);
