@@ -26,6 +26,7 @@ public class LeaderboardData {
     private LeaderboardData() {
         morning = new ArrayList();
         afternoon = new ArrayList();
+        /*
         FirebaseDatabase.getInstance().getReference("Morning Scores")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -50,6 +51,7 @@ public class LeaderboardData {
 
                     }
                 });
+                */
     }
 
     public static void initialize() {

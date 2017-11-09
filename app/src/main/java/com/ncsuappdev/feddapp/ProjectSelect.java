@@ -26,6 +26,9 @@ public class ProjectSelect extends AppCompatActivity {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Intent i = new Intent(ProjectSelect.this, Leaderboard3.class);
+                Bundle b = new Bundle();
+                b.putString("project", "3-D Printing");
+                i.putExtras(b);
                 startActivity(i);
             }
         });

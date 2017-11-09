@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "299792377569",
-    "firebase_url": "https://feddapp.firebaseio.com",
-    "project_id": "feddapp",
-    "storage_bucket": "feddapp.appspot.com"
+    "project_number": "793785966281",
+    "firebase_url": "https://fedapp-ncsu.firebaseio.com",
+    "project_id": "fedapp-ncsu",
+    "storage_bucket": "fedapp-ncsu.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:299792377569:android:b7b609991539a800",
+        "mobilesdk_app_id": "1:793785966281:android:737be2d086c46346",
         "android_client_info": {
-          "package_name": "com.ncsuappdev.feddapp"
+          "package_name": "com.ncsuappdev.fedapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "299792377569-js9358k4fvgj8qj6otdibehkjvlno0bj.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ncsuappdev.feddapp",
-            "certificate_hash": "85DA63C725FE222D91B5FB543D49FE82FDE1D6EF"
-          }
-        },
-        {
-          "client_id": "299792377569-tk8k9drhp5ll77qg8vhpbdkok6sh7i4p.apps.googleusercontent.com",
+          "client_id": "793785966281-mi8h217ptd1lmtt88g9dqpt7msrad4b6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBS9gBs0Y9VZxRUnXfQNo3L1vDfhIC28Yw"
+          "current_key": "AIzaSyD2iTbelzF1m0CEufPQp85Vb4sGerEsVUM"
         }
       ],
       "services": {
@@ -37,20 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "299792377569-vcd7ngs8tu8jqh43jmjofj1ncu7u9gpi.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.NCSUAppDev.FeddApp2"
-              }
-            },
-            {
-              "client_id": "299792377569-tk8k9drhp5ll77qg8vhpbdkok6sh7i4p.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

@@ -36,13 +36,20 @@ public class Leaderboard3 extends AppCompatActivity {
     public static Leaderboard3 instance;
     public ListView list;
     boolean morning = true;
+    public String project;
 
+    public void setProject(String s){
+        project = s;
+        //TODO Fire data reload event.
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard3);
+
+        project = getIntent().getExtras().getString("project");
 
         ActionBar bar = this.getSupportActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.RED));
